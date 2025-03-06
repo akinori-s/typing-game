@@ -7,12 +7,12 @@
         class="border p-2 rounded w-full mb-2"
         @keyup.enter="joinGame"
       />
-      <button
+      <v-btn
         @click="joinGame"
-        class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        color="primary"
       >
         Join Game
-      </button>
+      </v-btn>
     </div>
 
     <div v-else>
@@ -57,7 +57,7 @@ export default {
     joinGame() {
       if (!this.gameId) return;
 
-      this.ws = new WebSocket('ws://localhost:3000');
+      this.ws = new WebSocket('ws://localhost:3001');
       this.ws.onopen = () => {
         this.ws.send(JSON.stringify({ type: 'join', gameId: this.gameId }));
       };
