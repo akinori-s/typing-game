@@ -1,17 +1,18 @@
-import { AppDataSource } from '../config/db';
+import { pool } from '../config/db';
 import { IUser } from '../types';
 
 export class UserDao {
-  private db = AppDataSource;
+  private db = pool;
 
   async getAllUsers(): Promise<IUser[]> {
-    const result = await this.db.query('SELECT * FROM "user"');
-    return result as IUser[];
+    const result = await this.db.query('SELECT now()');
+    // const result = await this.db.query('SELECT * FROM "user"');
+    return result.rows as IUser[];
   }
 
   async getUserById(id: string): Promise<IUser | null> {
     const result = await this.db.query('SELECT * FROM "user" WHERE id = $1', [id]);
-    return result.length > 0 ? (result[0] as IUser) : null;
+    return result.rows.length > 0 ? (result.rows[0] as IUser) : null;
   }
 
   async createUser(data: { name: string; email: string; password: string }): Promise<IUser> {
@@ -20,7 +21,7 @@ export class UserDao {
       'INSERT INTO "user" (name, email, password) VALUES ($1, $2, $3) RETURNING *',
       [name, email, password]
     );
-    return result[0] as IUser;
+    return result.rows[0] as IUser;
   }
 }
 
