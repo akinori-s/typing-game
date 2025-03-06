@@ -1,7 +1,6 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
-import * as userController from './controllers/userController'; // Import controllers
-import { authMiddleware } from './middlewares/authMiddleware'; // Import middleware
+import userRoutes from './routes/userRoutes';
 import { logger } from './utils/logger';
 
 const app: Application = express();
@@ -10,10 +9,16 @@ const app: Application = express();
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.get('/api/users', userController.getAllUsers);
-// app.get('/api/users/:id', userController.getUserById);
-app.post('/api/users', userController.createUser);
-
+// Routes
+app.use('/api/users', userRoutes);
+// Fallback route for unmatched endpoints
+app.use('*', (req: Request, res: Response) => {
+	res.status(404).json({
+	  error: 'Not Found',
+	  message: `The requested endpoint ${req.originalUrl} does not exist`,
+	});
+  });
+  
 // Start Server
 const PORT = process.env.PORT || 3000;
 
