@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import { createServer } from 'http';
-import { setupWebSocket } from './websocket/controllers/wsController';
+import { setupWebSocket } from './controllers/wsController';
 import morgan from 'morgan';
 import userRoutes from './routes/userRoutes';
 import { logger } from './utils/logger';
